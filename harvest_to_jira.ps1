@@ -1,6 +1,4 @@
-#IMPORTANT: IN JIRA, THE ISSUE ID MUST BE AT THE START OF THE NOTES FIELD
-# e.g. "JT-1234: Worked on the feature" or "RT-1234 - Fixed a bug"
-# or "DP-4533  <mycomments>", or "XT-4533"
+#IMPORTANT: IN JIRA, THE ISSUE ID MUST BE AT THE START OF THE NOTES FIELD IN HARVEST
 
 # ------ add below $Global variables to your profile.ps1 file (less secure: or just adjust them here)-------
 # dates to populate into Jira
@@ -24,7 +22,7 @@ $Global:JiraEmail = "youremailusedinjiraprofile@yourcompany"
 $Global:JiraApiToken = "yourextralongjiraapitokengoeshere"           # Your API token
 
 # This is the pattern used for extracting jira task id from harvest hours entries 
-$Global:JiraPattern = '^([A-Za-z]{2}-\d+)(?:\s*:)?$'
+$Global:JiraPattern = '^([A-Za-z][A-Za-z0-9]*-\d+)(?=\D|$)'
 #----------------------------------------------------------------------------------------------------
 function Get_timesheets {
     param (
@@ -208,6 +206,7 @@ function Post_JiraWorklog {
     }
     Write-Host "`n=== Finished Jira Worklog Upload ===" -ForegroundColor Cyan
 }
+
 # After setting the global variables above, uncomment the line below to run the script
 # Or just run each function one at a time to see what is happening
 # Or leave it commented out and just call the functions manually in the right order from your PWSH/PowerShell console
