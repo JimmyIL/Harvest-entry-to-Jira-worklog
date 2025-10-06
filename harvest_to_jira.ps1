@@ -7,8 +7,8 @@
 # I honestly don't know what happens if you try to post a worklog for a date that already has one,
 # It probably adds a duplicate time entry?, but I haven't tested it
 # format: YYYY-MM-DD
-$Global:StartDate = "2025-07-10" # Start date for time entries
-$Global:EndDate = "2025-07-23" # End date for time entries
+$Global:StartDate = "2025-09-01" # Start date for time entries
+$Global:EndDate = "2025-10-01" # End date for time entries
         
 # Harvest configuration
 # You can get this from https://id.getharvest.com/developers/apps
@@ -177,14 +177,18 @@ function Post_JiraWorklog {
             Write-Host "Successfully logged $timeSpent to $IssueKey." -ForegroundColor Green
         }
         catch {
-            Write-Warning "Failed to log time for $IssueKey"
-            Write-Warning "Status: $($_.Exception.Response.StatusCode.Value__) ($($_.Exception.Response.StatusCode))"
-            if ($_.ErrorDetails) {
-                Write-Warning "Jira error: $($_.ErrorDetails.Message)"
+            if ($_.Exception.Response.StatusCode.Value__ -eq 404) {
+                Write-Warning "Issue $IssueKey not found in Jira. Skipping."
+            } else {
+                Write-Warning "Failed to log time for $IssueKey"
+                Write-Warning "Status: $($_.Exception.Response.StatusCode.Value__) ($($_.Exception.Response.StatusCode))"
+                if ($_.ErrorDetails) {
+                    Write-Warning "Jira error: $($_.ErrorDetails.Message)"
+                } else {
+                    Write-Warning "Exception: $($_.Exception.Message)"
+                }
             }
-            else {
-                Write-Warning "Exception: $($_.Exception.Message)"
-            }
+            # Do NOT exit or throw here; just continue to next entry
         }
     }
     # Where the magic happens
@@ -210,4 +214,6 @@ function Post_JiraWorklog {
 # After setting the global variables above, uncomment the line below to run the script
 # Or just run each function one at a time to see what is happening
 # Or leave it commented out and just call the functions manually in the right order from your PWSH/PowerShell console
+
+#uncomment the line below to run the whole process, !! be sure your global variables are set correctly above !!
 # Get_timesheets && harvest_times_to_jira && Post_JiraWorklog
