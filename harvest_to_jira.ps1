@@ -7,8 +7,8 @@
 # I honestly don't know what happens if you try to post a worklog for a date that already has one,
 # It probably adds a duplicate time entry?, but I haven't tested it
 # format: YYYY-MM-DD
-$Global:StartDate = "2025-09-01" # Start date for time entries
-$Global:EndDate = "2025-10-01" # End date for time entries
+$Global:StartDate = "2025-10-01" # Start date for time entries
+$Global:EndDate = "2025-10-31" # End date for time entries
         
 # Harvest configuration
 # You can get this from https://id.getharvest.com/developers/apps
@@ -69,7 +69,7 @@ function Get_timesheets {
     Write-Host "Retrieved $($AllEntries.Count) time entries from $StartDate to $EndDate."
     $Global:harvestTimes = $AllEntries | ForEach-Object {
         [PSCustomObject]@{
-            Hours     = $_.hours
+            Hours     = $_.rounded_hours
             Notes     = $_.notes
             SpentDate = $_.spent_date
         }
